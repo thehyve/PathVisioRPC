@@ -9,6 +9,8 @@ import org.bridgedb.IDMapperException;
 import org.pathvisio.core.Engine;
 import org.pathvisio.core.model.ConverterException;
 import org.pathvisio.core.preferences.PreferenceManager;
+import org.pathvisio.data.DataException;
+import org.pathvisio.data.ISample;
 import org.pathvisio.desktop.gex.GexManager;
 import org.pathvisio.desktop.gex.Sample;
 import org.pathvisio.desktop.visualization.ColorRule;
@@ -22,6 +24,8 @@ import org.pathvisio.visualization.plugins.DataNodeLabel;
 /**
  * 
  * @author anwesha, magali
+ *
+ * Note by plukasse: this file seems redundant...looks like a copy from VisualizationXMLHandler...
  *
  */
 public class VisualizationHandler {
@@ -51,9 +55,9 @@ public class VisualizationHandler {
 	public String createVisualization(String gexFile , 
 			String gColorSet, String gColor, String gValue,
 			String rColorSet, String rColor, String rExpr)
-					throws IDMapperException, ConverterException, IOException, SecurityException, 
-					NoSuchFieldException, ClassNotFoundException, IllegalArgumentException, 
-					IllegalAccessException {
+            throws IDMapperException, ConverterException, IOException, SecurityException,
+            NoSuchFieldException, ClassNotFoundException, IllegalArgumentException,
+            IllegalAccessException, DataException {
 		
 		// Initialization
 		PreferenceManager.init();
@@ -97,7 +101,7 @@ public class VisualizationHandler {
 		//	ColorSet csG = grevis.createGradient(gcount, gColorNames[gcount], 
 			//		gValues[gcount], gSample[gcount]);
 			//colsetmgr.addColorSet(csG);
-			Sample sG = gex.getCurrentGex().findSample(gSample[gcount]);
+			ISample sG = gex.getCurrentGex().findSample(gSample[gcount]);
 			cbe.addUseSample(sG);
 			//cbe.getConfiguredSample(sG).setColorSet(csG);
 		}
@@ -154,7 +158,7 @@ public class VisualizationHandler {
 			}
 			
 			colsetmgr.addColorSet(csR);	
-			Sample sR = createSample(cbe, rExprs[rcount], gex); 
+			ISample sR = createSample(cbe, rExprs[rcount], gex);
 			cbe.addUseSample(sR);
 			cbe.getConfiguredSample(sR).setColorSet(csR);
 		}
@@ -166,7 +170,7 @@ public class VisualizationHandler {
 		Visualization vis = new Visualization("Visualization");		
 		vis.addMethod(cbe);
 		vis.addMethod(dnl);
-		vis.setShowLegend(true);	
+		//vis.setShowLegend(true);
 		visman.addVisualization(vis);
 		visman.saveXML();
 		
@@ -179,11 +183,11 @@ public class VisualizationHandler {
 	 * possible - now we use the next available variable although
 	 * it might not be part of the color rule
 	 */
-	private Sample createSample(ColorByExpression cbe, String rExpr, GexManager gex)
-			throws IDMapperException {
+	private ISample createSample(ColorByExpression cbe, String rExpr, GexManager gex)
+            throws IDMapperException, DataException {
 
 		// Inspired from the boolean expression parser by Martijn	
-		Sample sample = new Sample(0, "noSample");
+		ISample sample = new Sample(0, "noSample");
 		String input = rExpr;
 		String value = "";
 		int token = 0;
@@ -208,7 +212,7 @@ public class VisualizationHandler {
 			}
 		}
 		// else, use an arbitrary sample name...
-		List<Sample> allSampleList = gex.getCurrentGex().getOrderedSamples();
+		List<? extends ISample> allSampleList = gex.getCurrentGex().getOrderedSamples();
 		int sampleNb = allSampleList.size();
 		for (int i = 0 ; i<sampleNb;i++){
 			sample = allSampleList.get(i);

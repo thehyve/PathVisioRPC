@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.bridgedb.IDMapperException;
+import org.pathvisio.data.DataException;
 import org.pathvisio.desktop.gex.GexManager;
 import org.pathvisio.core.preferences.PreferenceManager;
 import org.pathvisio.desktop.visualization.ColorRule;
@@ -15,7 +16,7 @@ public class RuleVis {
 	//For reading expression dataset
 	public static final int TYPE_GEX = 1;
 	
-public ColorSet createRule(int rcount, String gexFileName, String colrNames, String expressions) throws IDMapperException, SecurityException, NoSuchFieldException, ClassNotFoundException, IllegalArgumentException, IllegalAccessException, IOException{
+public ColorSet createRule(int rcount, String gexFileName, String colrNames, String expressions) throws IDMapperException, SecurityException, NoSuchFieldException, ClassNotFoundException, IllegalArgumentException, IllegalAccessException, IOException, DataException {
 		
 		PreferenceManager.init();
 		GexManager gex = new GexManager();

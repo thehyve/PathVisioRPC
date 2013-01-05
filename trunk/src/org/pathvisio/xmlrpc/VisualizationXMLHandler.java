@@ -9,6 +9,8 @@ import org.bridgedb.IDMapperException;
 import org.pathvisio.core.Engine;
 import org.pathvisio.core.model.ConverterException;
 import org.pathvisio.core.preferences.PreferenceManager;
+import org.pathvisio.data.DataException;
+import org.pathvisio.data.ISample;
 import org.pathvisio.desktop.gex.GexManager;
 import org.pathvisio.desktop.gex.Sample;
 import org.pathvisio.desktop.visualization.ColorGradient;
@@ -24,7 +26,7 @@ import org.pathvisio.visualization.plugins.DataNodeLabel;
 
 public class VisualizationXMLHandler {
 	
-	public String createVisualization(String gexFile , String Gsam, String colorNames, String values, String Rsam, String colrNames, String expressions) throws IDMapperException, ConverterException, IOException, SecurityException, NoSuchFieldException, ClassNotFoundException, IllegalArgumentException, IllegalAccessException {
+	public String createVisualization(String gexFile , String Gsam, String colorNames, String values, String Rsam, String colrNames, String expressions) throws IDMapperException, ConverterException, IOException, SecurityException, NoSuchFieldException, ClassNotFoundException, IllegalArgumentException, IllegalAccessException, DataException {
 		PreferenceManager.init();
 		Engine engine = new Engine ();//Create engine to load pathway
 		GexManager gex = new GexManager();
@@ -45,7 +47,7 @@ public class VisualizationXMLHandler {
 				GradientVis grevis = new GradientVis();
 				ColorSet cs1 = grevis.createGradient(gcount, colorNames1[gcount], values1[gcount]);
 				colsetmgr.addColorSet(cs1);
-				Sample s1 = gex.getCurrentGex().findSample(sample1[gcount]);
+				ISample s1 = gex.getCurrentGex().findSample(sample1[gcount]);
 				cbe.addUseSample(s1);
 				cbe.getConfiguredSample(s1).setColorSet(cs1);
 				}
@@ -67,7 +69,7 @@ public class VisualizationXMLHandler {
 						}
 				cs1.setGradient(cg);
 				colsetmgr.addColorSet(cs1);
-				Sample s1 = gex.getCurrentGex().findSample(Gsam);
+				ISample s1 = gex.getCurrentGex().findSample(Gsam);
 				cbe.addUseSample(s1);
 				cbe.getConfiguredSample(s1).setColorSet(cs1);
 				}
@@ -81,7 +83,7 @@ public class VisualizationXMLHandler {
 			RuleVis rulvis = new RuleVis();
 			ColorSet cs2 = rulvis.createRule(rcount, gexFile, colrNames1[rcount], expr[rcount]);
 			colsetmgr.addColorSet(cs2);
-			Sample s2 = gex.getCurrentGex().findSample(sample2[rcount]);
+			ISample s2 = gex.getCurrentGex().findSample(sample2[rcount]);
 			cbe.addUseSample(s2);
 			cbe.getConfiguredSample(s2).setColorSet(cs2);
 			}
@@ -99,7 +101,7 @@ public class VisualizationXMLHandler {
 				 if (msg != null) throw new IOException(msg);
 				 cs2.addRule(cr);
 				 colsetmgr.addColorSet(cs2);
-				 Sample s2 = gex.getCurrentGex().findSample(Rsam);
+				 ISample s2 = gex.getCurrentGex().findSample(Rsam);
 				 cbe.addUseSample(s2);
 				 cbe.getConfiguredSample(s2).setColorSet(cs2);
 			 	}
@@ -109,9 +111,9 @@ public class VisualizationXMLHandler {
 		Visualization vis = new Visualization("Visualization");//Creating visualization and adding visualizationmethod
 		vis.addMethod(cbe);
 		vis.addMethod(dnl);
-		vis.setShowLegend(true);
+		//vis.setShowLegend(true);
 		visman.addVisualization(vis);
-		visman.saveXML();
+		visman.saveXML();    Pa - DELETING TEMP FILE IS FAILING
 		
 		return "Visualization created!";
 	}
